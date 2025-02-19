@@ -96,8 +96,8 @@ public class Principal {
 	}
 
 	private void listarSeriesBuscadas() {
-		List<Serie> series = new ArrayList<Serie>();
-		series = seriesBuscadas.stream().map(ds -> new Serie(ds)).collect(Collectors.toList());
+		
+		List<Serie> series = repositorio.findAll();
 
 		series.stream().sorted(Comparator.comparing(Serie::getGenero)).forEach(System.out::println);
 
