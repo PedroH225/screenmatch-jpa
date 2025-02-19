@@ -91,17 +91,9 @@ public class Principal {
 
 	private void listarSeriesBuscadas() {
 		List<Serie> series = new ArrayList<Serie>();
-		series = seriesBuscadas.stream()
-				.map(ds -> new Serie(ds))
-				.collect(Collectors.toList());
-		
-		series.stream()
-		.sorted(Comparator.comparing(Serie::getGenero))
-		.forEach(System.out::println);
-		
-		
+		series = seriesBuscadas.stream().map(ds -> new Serie(ds)).collect(Collectors.toList());
+
+		series.stream().sorted(Comparator.comparing(Serie::getGenero)).forEach(System.out::println);
+
 	}
 }
-
-
-

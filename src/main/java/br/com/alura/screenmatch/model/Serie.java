@@ -2,20 +2,22 @@ package br.com.alura.screenmatch.model;
 
 import java.util.OptionalDouble;
 
+import br.com.alura.screenmatch.service.TraducaoService;
+
 public class Serie {
-	
+
 	private String titulo;
-	
+
 	private Integer totalTemporadas;
-	
+
 	private Double avaliacao;
-	
+
 	private Categoria genero;
-	
+
 	private String atores;
-	
+
 	private String poster;
-	
+
 	private String sinopse;
 
 	public Serie(DadosSerie dadosSerie) {
@@ -25,7 +27,7 @@ public class Serie {
 		this.genero = Categoria.fromString(dadosSerie.genero().split(",")[0].trim());
 		this.atores = dadosSerie.atores();
 		this.poster = dadosSerie.poster();
-		this.sinopse = dadosSerie.sinopse();
+		this.sinopse = TraducaoService.traduzir(dadosSerie.sinopse());
 	}
 
 	public String getTitulo() {
@@ -86,10 +88,8 @@ public class Serie {
 
 	@Override
 	public String toString() {
-		return "[genero=" + genero + ", titulo=" + titulo + ", totalTemporadas=" + totalTemporadas + ", avaliacao=" + avaliacao
-				+ ", atores=" + atores + ", poster=" + poster + ", sinopse=" + sinopse + "]";
+		return "[genero=" + genero + ", titulo=" + titulo + ", totalTemporadas=" + totalTemporadas + ", avaliacao="
+				+ avaliacao + ", atores=" + atores + ", poster=" + poster + ", sinopse=" + sinopse + "]";
 	}
-	
-	
-	
+
 }
