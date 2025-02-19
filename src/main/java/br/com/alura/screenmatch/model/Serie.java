@@ -1,17 +1,37 @@
 package br.com.alura.screenmatch.model;
 
+import java.util.List;
 import java.util.OptionalDouble;
 
 import br.com.alura.screenmatch.service.TraducaoService;
+import jakarta.annotation.Generated;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
+@Entity
+@Table(name = "series")
 public class Serie {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private String id;
+	
+	@Column(unique = true)
 	private String titulo;
 
 	private Integer totalTemporadas;
 
 	private Double avaliacao;
 
+	@Enumerated(EnumType.STRING)
 	private Categoria genero;
 
 	private String atores;
@@ -19,6 +39,9 @@ public class Serie {
 	private String poster;
 
 	private String sinopse;
+	
+	@Transient
+	List<Episodio> episodios;
 
 	public Serie(DadosSerie dadosSerie) {
 		this.titulo = dadosSerie.titulo();
@@ -84,6 +107,14 @@ public class Serie {
 
 	public void setSinopse(String sinopse) {
 		this.sinopse = sinopse;
+	}
+
+	public List<Episodio> getEpisodios() {
+		return episodios;
+	}
+
+	public void setEpisodios(List<Episodio> episodios) {
+		this.episodios = episodios;
 	}
 
 	@Override
