@@ -41,7 +41,8 @@ public class Principal {
 					2 - Buscar episódios
 					3 - Listar séries buscadas
 					4 - Buscar por ator
-
+					5 - Top 5 Séries
+					
 					0 - Sair
 					""";
 
@@ -65,6 +66,10 @@ public class Principal {
 			case 4:
 				System.out.println();
 				buscarSériePorAtor();
+				break;
+			case 5:
+				System.out.println();
+				listarTop5Series();
 				break;
 			case 0:
 				System.out.println("Saindo...");
@@ -94,54 +99,53 @@ public class Principal {
 		listarSeriesBuscadas();
 		System.out.println("Digite uma série pelo nome: ");
 		String tituloSerie = leitura.nextLine();
-				
-				
+
 		Optional<Serie> buscarSerie = repositorio.findByTituloContainingIgnoreCase(tituloSerie);
-		
+
 		List<DadosTemporada> temporadas = new ArrayList<>();
 		if (buscarSerie.isPresent()) {
 			Serie serieBuscada = buscarSerie.get();
 			for (int i = 1; i <= serieBuscada.getTotalTemporadas(); i++) {
-				var json = consumo.obterDados(ENDERECO + serieBuscada.getTitulo().replace(" ", "+") + "&season=" + i + API_KEY);
+				var json = consumo
+						.obterDados(ENDERECO + serieBuscada.getTitulo().replace(" ", "+") + "&season=" + i + API_KEY);
 				DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
 				temporadas.add(dadosTemporada);
 			}
 			temporadas.forEach(System.out::println);
-			
+
 			List<Episodio> episodios = temporadas.stream()
-					.flatMap(d -> d.episodios().stream()
-							.map(ep -> new Episodio(d.numero(), ep)))
+					.flatMap(d -> d.episodios().stream().map(ep -> new Episodio(d.numero(), ep)))
 					.collect(Collectors.toList());
-			
+
 			serieBuscada.setEpisodios(episodios);
-			
+
 			repositorio.save(serieBuscada);
-			
+
 		} else {
 			System.out.println("Série não encontrada");
 		}
 
-		
 	}
 
 	private void listarSeriesBuscadas() {
-		
+
 		series = repositorio.findAll();
 
 		series.stream().sorted(Comparator.comparing(Serie::getGenero)).forEach(System.out::println);
 
 	}
-	
+
 	private void buscarSériePorAtor() {
 		System.out.println("Digite o nome do ator: ");
 		String nomeAtor = leitura.nextLine();
-		
+
 		System.out.println("Avaliações a partir de que valor?: ");
 		Double avaliacao = leitura.nextDouble();
 		System.out.println();
-		
-		List<Serie> seriesBuscadas = repositorio.findAllByAtoresContainingIgnoreCaseAndAvaliacaoGreaterThanEqual(nomeAtor, avaliacao);
-		
+
+		List<Serie> seriesBuscadas = repositorio
+				.findAllByAtoresContainingIgnoreCaseAndAvaliacaoGreaterThanEqual(nomeAtor, avaliacao);
+
 		if (!seriesBuscadas.isEmpty()) {
 			System.out.println("Séries em que " + nomeAtor + " trabalhou:");
 			seriesBuscadas.forEach(s -> {
@@ -151,11 +155,23 @@ public class Principal {
 		} else {
 			System.out.println("Nenhuma série encontrada!");
 		}
-		
+
 	}
 	
+	private void listarTop5Series() {
+		System.out.println();
+		
+		List<Serie> top5Series = repositorio.findTop5ByOrderByAvaliacaoDesc();
+		
+		if (!top5Series.isEmpty()) {
+			System.out.println("Top 5 séries:");
+			top5Series.forEach(s -> {
+				System.out.println(s.getTitulo() + ", avaliação: " + s.getAvaliacao());
+			});
+			System.out.println();
+		} else {
+			System.out.println("Nenhuma série encontrada");
+		}
+	}
+
 }
-
-
-
-
