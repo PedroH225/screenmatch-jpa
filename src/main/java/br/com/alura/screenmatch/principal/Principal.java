@@ -41,6 +41,7 @@ public class Principal {
 					4 - Buscar por ator
 					5 - Top 5 Séries
 					6 - Buscar por categoria
+					7 - Buscar por temporada e avaliação
 
 
 					0 - Sair
@@ -76,6 +77,10 @@ public class Principal {
 				System.out.println();
 				buscarPorCategoria();
 				break;
+			case 7:
+				System.out.println();
+				buscarPorTempAvaliacao();
+				break;
 
 			case 0:
 				System.out.println("Saindo...");
@@ -84,6 +89,28 @@ public class Principal {
 				System.out.println("Opção inválida");
 			}
 		}
+	}
+
+	private void buscarPorTempAvaliacao() {
+		System.out.println("Digite o número máximo de temporadas:");
+		Integer numTemp = leitura.nextInt();
+
+		System.out.println("Digite a nota mínima de avaliação:");
+		Double minAv = leitura.nextDouble();
+
+		List<Serie> seriesBuscadas = repositorio.findAllByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual
+				(numTemp, minAv);
+		
+		System.out.println();
+		if (!seriesBuscadas.isEmpty()) {
+			seriesBuscadas.forEach(s -> {
+				System.out.println(s.getTitulo() + ", Total de temporadas: " + s.getTotalTemporadas() + ", avaliação: " + s.getAvaliacao());
+			});
+			System.out.println();
+		} else {
+			System.out.println("Nenhuma série encontrada!");
+		}
+		
 	}
 
 	private void buscarPorCategoria() {
