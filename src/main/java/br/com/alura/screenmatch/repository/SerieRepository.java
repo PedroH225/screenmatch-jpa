@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import br.com.alura.screenmatch.model.Categoria;
 import br.com.alura.screenmatch.model.Serie;
 
 @Repository
@@ -16,5 +17,8 @@ public interface SerieRepository extends JpaRepository<Serie, String> {
 	List<Serie> findAllByAtoresContainingIgnoreCaseAndAvaliacaoGreaterThanEqual(String ator, Double avaliacao);
 	
 	List<Serie> findTop5ByOrderByAvaliacaoDesc();
+	
+	List<Serie> findAllByGenero(Categoria categoria);
+
 
 }

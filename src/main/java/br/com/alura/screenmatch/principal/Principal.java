@@ -1,5 +1,13 @@
 package br.com.alura.screenmatch.principal;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+import br.com.alura.screenmatch.model.Categoria;
 import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.model.DadosTemporada;
 import br.com.alura.screenmatch.model.Episodio;
@@ -7,16 +15,6 @@ import br.com.alura.screenmatch.model.Serie;
 import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
-import ch.qos.logback.core.property.ResourceExistsPropertyDefiner;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.DoubleSummaryStatistics;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Principal {
 
@@ -42,7 +40,9 @@ public class Principal {
 					3 - Listar séries buscadas
 					4 - Buscar por ator
 					5 - Top 5 Séries
-					
+					6 - Buscar por categoria
+
+
 					0 - Sair
 					""";
 
@@ -71,12 +71,37 @@ public class Principal {
 				System.out.println();
 				listarTop5Series();
 				break;
+
+			case 6:
+				System.out.println();
+				buscarPorCategoria();
+				break;
+
 			case 0:
 				System.out.println("Saindo...");
 				break;
 			default:
 				System.out.println("Opção inválida");
 			}
+		}
+	}
+
+	private void buscarPorCategoria() {
+		System.out.println("Digite a categoria: ");
+		String categoriaBuscada = leitura.nextLine();
+
+		Categoria categoria = Categoria.fromPortugues(categoriaBuscada);
+
+		var seriesBuscadas = repositorio.findAllByGenero(categoria);
+
+		System.out.println();
+		if (!seriesBuscadas.isEmpty()) {
+			seriesBuscadas.forEach(s -> {
+				System.out.println(s.getTitulo() + ", avaliação: " + s.getAvaliacao());
+			});
+			System.out.println();
+		} else {
+			System.out.println("Nenhuma série encontrada!");
 		}
 	}
 
@@ -157,12 +182,12 @@ public class Principal {
 		}
 
 	}
-	
+
 	private void listarTop5Series() {
 		System.out.println();
-		
+
 		List<Serie> top5Series = repositorio.findTop5ByOrderByAvaliacaoDesc();
-		
+
 		if (!top5Series.isEmpty()) {
 			System.out.println("Top 5 séries:");
 			top5Series.forEach(s -> {
