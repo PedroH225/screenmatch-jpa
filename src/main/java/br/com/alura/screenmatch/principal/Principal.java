@@ -40,6 +40,7 @@ public class Principal {
 					1 - Buscar séries
 					2 - Buscar episódios
 					3 - Listar séries buscadas
+					4 - Buscar por título
 
 					0 - Sair
 					""";
@@ -91,9 +92,7 @@ public class Principal {
 		String tituloSerie = leitura.nextLine();
 				
 				
-		Optional<Serie> buscarSerie = series.stream()
-				.filter(s -> s.getTitulo().toLowerCase().contains(tituloSerie.toLowerCase()))
-				.findFirst();
+		Optional<Serie> buscarSerie = repositorio.findByTituloContainingIgnoreCase(tituloSerie);
 		
 		List<DadosTemporada> temporadas = new ArrayList<>();
 		if (buscarSerie.isPresent()) {
