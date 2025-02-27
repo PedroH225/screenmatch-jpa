@@ -98,8 +98,7 @@ public class Principal {
 		System.out.println("Digite a nota mínima de avaliação:");
 		Double minAv = leitura.nextDouble();
 
-		List<Serie> seriesBuscadas = repositorio.findAllByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual
-				(numTemp, minAv);
+		List<Serie> seriesBuscadas = repositorio.buscarTotalTemporadasAvaliacao(numTemp, minAv);
 		
 		System.out.println();
 		if (!seriesBuscadas.isEmpty()) {
@@ -112,7 +111,7 @@ public class Principal {
 		}
 		
 	}
-
+	
 	private void buscarPorCategoria() {
 		System.out.println("Digite a categoria: ");
 		String categoriaBuscada = leitura.nextLine();

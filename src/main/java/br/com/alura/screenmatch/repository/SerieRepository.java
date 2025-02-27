@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import br.com.alura.screenmatch.model.Categoria;
@@ -21,6 +22,9 @@ public interface SerieRepository extends JpaRepository<Serie, String> {
 	List<Serie> findAllByGenero(Categoria categoria);
 	
 	List<Serie> findAllByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(Integer numTemp, Double avaliacao);
+	
+	@Query("select s from Serie s where s.totalTemporadas <= :numTemp AND s.avaliacao >= :avaliacao")
+	List<Serie> buscarTotalTemporadasAvaliacao(Integer numTemp, Double avaliacao);
 
 
 }
