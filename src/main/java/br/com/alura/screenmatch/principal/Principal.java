@@ -42,7 +42,7 @@ public class Principal {
 					5 - Top 5 Séries
 					6 - Buscar por categoria
 					7 - Buscar por temporada e avaliação
-
+					8 - Buscar episódio por trecho
 
 					0 - Sair
 					""";
@@ -50,36 +50,33 @@ public class Principal {
 			System.out.println(menu);
 			opcao = leitura.nextInt();
 			leitura.nextLine();
-
+			
+			System.out.println();
 			switch (opcao) {
 			case 1:
-				System.out.println();
 				buscarSerieWeb();
 				break;
 			case 2:
-				System.out.println();
 				buscarEpisodioPorSerie();
 				break;
 			case 3:
-				System.out.println();
 				listarSeriesBuscadas();
 				break;
 			case 4:
-				System.out.println();
 				buscarSériePorAtor();
 				break;
 			case 5:
-				System.out.println();
 				listarTop5Series();
 				break;
 
 			case 6:
-				System.out.println();
 				buscarPorCategoria();
 				break;
 			case 7:
-				System.out.println();
 				buscarPorTempAvaliacao();
+				break;
+			case 8:
+				buscarEpisodioPorTrecho();
 				break;
 
 			case 0:
@@ -91,6 +88,20 @@ public class Principal {
 		}
 	}
 
+	public void buscarEpisodioPorTrecho() {
+		System.out.println("Digite o trecho do episódio:");
+		String trecho = leitura.nextLine();
+		
+		var buscaEpisodios = repositorio.buscarEpisodioPorTrecho(trecho);
+		
+		if (!buscaEpisodios.isEmpty()) {
+			buscaEpisodios.forEach(System.out::println);
+		} else {
+			System.out.println("Nenhum episódio encontrado!");
+		}
+		
+	}
+
 	private void buscarPorTempAvaliacao() {
 		System.out.println("Digite o número máximo de temporadas:");
 		Integer numTemp = leitura.nextInt();
@@ -99,19 +110,20 @@ public class Principal {
 		Double minAv = leitura.nextDouble();
 
 		List<Serie> seriesBuscadas = repositorio.buscarTotalTemporadasAvaliacao(numTemp, minAv);
-		
+
 		System.out.println();
 		if (!seriesBuscadas.isEmpty()) {
 			seriesBuscadas.forEach(s -> {
-				System.out.println(s.getTitulo() + ", Total de temporadas: " + s.getTotalTemporadas() + ", avaliação: " + s.getAvaliacao());
+				System.out.println(s.getTitulo() + ", Total de temporadas: " + s.getTotalTemporadas() + ", avaliação: "
+						+ s.getAvaliacao());
 			});
 			System.out.println();
 		} else {
 			System.out.println("Nenhuma série encontrada!");
 		}
-		
+
 	}
-	
+
 	private void buscarPorCategoria() {
 		System.out.println("Digite a categoria: ");
 		String categoriaBuscada = leitura.nextLine();

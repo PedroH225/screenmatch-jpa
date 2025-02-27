@@ -29,7 +29,7 @@ public class Episodio {
 
 	private LocalDate dataLancamento;
 
-	@ManyToOne
+	@ManyToOne()
 	private Serie serie;
 
 	public Episodio() {
