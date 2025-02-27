@@ -43,6 +43,7 @@ public class Principal {
 					6 - Buscar por categoria
 					7 - Buscar por temporada e avaliação
 					8 - Buscar episódio por trecho
+					9 - Top 5 episódios por série
 
 					0 - Sair
 					""";
@@ -78,6 +79,9 @@ public class Principal {
 			case 8:
 				buscarEpisodioPorTrecho();
 				break;
+			case 9:
+				top5EpsPorSerie();
+				break;
 
 			case 0:
 				System.out.println("Saindo...");
@@ -86,6 +90,33 @@ public class Principal {
 				System.out.println("Opção inválida");
 			}
 		}
+	}
+
+	public void top5EpsPorSerie() {
+		Optional<Serie> buscarSerie = buscarPorTitulo();
+		
+		if (buscarSerie.isPresent()) {
+			System.out.println();
+			System.out.println("Top 5 episódios da série " + buscarSerie.get().getTitulo() + ":");
+			var top5Eps = repositorio.top5EpsPorSerie(buscarSerie.get());
+			top5Eps.forEach(System.out::println);
+		}
+	}
+	
+	private Optional<Serie> buscarPorTitulo() {
+		System.out.println("Digite o nome da série:");
+		String nomeSerie = leitura.nextLine();
+		
+		var buscarSerie = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
+		
+		if (buscarSerie.isPresent()) {
+			System.out.println("Série encontrada!");
+			System.out.println(buscarSerie.get());
+		} else {
+			System.out.println("Nenhuma série encontrada.");
+		}
+		
+		return buscarSerie;
 	}
 
 	public void buscarEpisodioPorTrecho() {
