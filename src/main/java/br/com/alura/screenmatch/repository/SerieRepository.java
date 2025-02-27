@@ -1,5 +1,6 @@
 package br.com.alura.screenmatch.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,5 +33,7 @@ public interface SerieRepository extends JpaRepository<Serie, String> {
 
 	@Query("SELECT e FROM Serie s JOIN s.episodios e WHERE serie = :s ORDER BY e.avaliacao DESC LIMIT 5")
 	List<Episodio> top5EpsPorSerie(Serie s);
-
+	
+	@Query("SELECT e FROM Serie s JOIN s.episodios e WHERE serie = :s AND e.dataLancamento BETWEEN :data1 AND :data2")
+	List<Episodio> episodiosPorLancamento(Serie s, LocalDate data1, LocalDate data2);
 }

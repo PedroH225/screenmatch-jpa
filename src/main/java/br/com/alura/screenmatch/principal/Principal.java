@@ -1,5 +1,8 @@
 package br.com.alura.screenmatch.principal;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -44,6 +47,7 @@ public class Principal {
 					7 - Buscar por temporada e avaliação
 					8 - Buscar episódio por trecho
 					9 - Top 5 episódios por série
+					10 - Buscar por data de lançamento
 
 					0 - Sair
 					""";
@@ -51,7 +55,7 @@ public class Principal {
 			System.out.println(menu);
 			opcao = leitura.nextInt();
 			leitura.nextLine();
-			
+
 			System.out.println();
 			switch (opcao) {
 			case 1:
@@ -82,6 +86,9 @@ public class Principal {
 			case 9:
 				top5EpsPorSerie();
 				break;
+			case 10:
+				buscarPorLancamento();
+				break;
 
 			case 0:
 				System.out.println("Saindo...");
@@ -92,9 +99,40 @@ public class Principal {
 		}
 	}
 
+	private void buscarPorLancamento() {
+		Optional<Serie> buscarSerie = buscarPorTitulo();
+		System.out.println("Digite uma data (dd/MM/yyyy):");
+		String dataString = leitura.nextLine();
+
+		System.out.println("Digite outra data (dd/MM/yyyy):");
+		String dataString2 = leitura.nextLine();
+
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+		try {
+			LocalDate data = LocalDate.parse(dataString, dtf);
+			LocalDate data2 = LocalDate.parse(dataString2, dtf);
+
+			if (buscarSerie.isPresent()) {
+				List<Episodio> buscarEpisodios = repositorio.episodiosPorLancamento(buscarSerie.get(), data, data2);
+
+				if (!buscarEpisodios.isEmpty()) {
+					System.out.println(
+							"Episódios com data de lançamento entre " + dataString + " e " + dataString2 + ":");
+
+					buscarEpisodios.forEach(System.out::println);
+				} else {
+					System.out.println("Nenhum episódio encontrado.");
+				}
+			}
+		} catch (DateTimeParseException e) {
+			System.out.println("Data inválida: " + dataString);
+		}
+	}
+
 	public void top5EpsPorSerie() {
 		Optional<Serie> buscarSerie = buscarPorTitulo();
-		
+
 		if (buscarSerie.isPresent()) {
 			System.out.println();
 			System.out.println("Top 5 episódios da série " + buscarSerie.get().getTitulo() + ":");
@@ -102,35 +140,35 @@ public class Principal {
 			top5Eps.forEach(System.out::println);
 		}
 	}
-	
+
 	private Optional<Serie> buscarPorTitulo() {
 		System.out.println("Digite o nome da série:");
 		String nomeSerie = leitura.nextLine();
-		
+
 		var buscarSerie = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
-		
+
 		if (buscarSerie.isPresent()) {
 			System.out.println("Série encontrada!");
 			System.out.println(buscarSerie.get());
 		} else {
 			System.out.println("Nenhuma série encontrada.");
 		}
-		
+
 		return buscarSerie;
 	}
 
 	public void buscarEpisodioPorTrecho() {
 		System.out.println("Digite o trecho do episódio:");
 		String trecho = leitura.nextLine();
-		
+
 		var buscaEpisodios = repositorio.buscarEpisodioPorTrecho(trecho);
-		
+
 		if (!buscaEpisodios.isEmpty()) {
 			buscaEpisodios.forEach(System.out::println);
 		} else {
 			System.out.println("Nenhum episódio encontrado!");
 		}
-		
+
 	}
 
 	private void buscarPorTempAvaliacao() {
